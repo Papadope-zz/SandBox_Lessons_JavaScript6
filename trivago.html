@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      #controls {
+        border: 2px solid black;
+        padding: 10px;
+        background-color: skyblue;
+        /* Bottom, Right, Blur, Color */
+        box-shadow: 6px 6px 16px rgba(0,0,0,0.3)
+      }
+      .hotel {
+        border: 1px solid gray;
+        padding: 10px;
+        margin: 10px;
+        box-shadow: 6px 6px 16px rgba(0,0,0,0.3)
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Trivago</h1>
+    <div id="controls">
+      <form>
+        <input list="hotels_list" placeholder="e.g. Paris" id="city">
+        <datalist id="hotels_list">
+          <!-- <option value="Paris"></option>
+          <option value="Marseille"></option>
+          <option value="Toulouse"></option> -->
+        </datalist>
+        <button>Search</button>
+        <input id="price" type="range" min=40 max=240 value=240 step=5>
+        <label for="price">Price: <span id="selected_price">240</span></label>
+        <select id="rating">
+          <option value="1">1 Star</option>
+          <option value="2">2 Stars</option>
+          <option value="3">3 Stars</option>
+          <option value="4">4 Stars</option>
+          <option value="5" selected>5 Stars</option>
+        </select>
+      </form>
+    </div>
+    <div id="hotels"></div>
+    <script>
+      const hotels = [
+        {
+          city: "Chania",
+          name: "Thalassa",
+          price: 100,
+          rating: 5,
+          extras:{
+            review: 4
+          }
+        },
+        {
+          city: "Paris",
+          name: "Hilton",
+          price: 100,
+          rating: 3,
+          extras:{
+            review: 4
+         }
+        },
+        {
+          city: "Paris",
+          name: "Opera",
+          price: 200,
+          rating: 5
+        },
+        {
+          city: "Marseille",
+          name: "Noir",
+          price: 80,
+          rating: 2
+        },
+        {
+          city: "Marseille",
+          name: "Excelsior",
+          price: 140,
+          rating: 4
+        },
+        {
+          city: "Toulouse",
+          name: "Intercontinental",
+          price: 190,
+          rating: 4
+        },
+        {
+          city: "Toulouse",
+          name: "Lautrec",
+          price: 220,
+          rating: 5
+        }
+      ];
+      const city = document.querySelector("#city");
+      const form = document.querySelector("form");
+      const price = document.querySelector("#price");
+      const hotelsBox = document.querySelector("#hotels");
+      const selectedPriceVal = document.querySelector("#selected_price");
+      const rating = document.querySelector("#rating");
+      const hotelsDataList = document.querySelector("#hotels_list");
+
+      // Get unique cities:
+      const cities = [];
+      let options = "";
+      for ( let i=0; i<hotels.length; i++ ){
+        let private    = 1; // This is private variable
+        var notPrivate = 2; // This is global!
+        if ( cities.indexOf( hotels[i].city ) < 0 ){
+          cities.push( hotels[i].city );
+          options += `<option value="${hotels[i].city}"></option>`
+        }
+      }
+      hotelsDataList.innerHTML = options;
+      console.log( cities );
+
+      let filteredHotels = hotels;
+      let selectedCity = null;
+      let selectedPrice = 240;
+      let selectedRating = 5;
+
+      // Nested objects: hotel.extras.guest <= selectedGuestRating;
+      
+      function byRating( hotel ){
+        return hotel.rating <= selectedRating;
+      }
+      function byCity( hotel ){
+        if ( selectedCity ){
+          // "paris" !== "PariS" --> "paris" === "paris" 
+          return hotel.city.toLowerCase() === selectedCity.toLowerCase();
+        } else {
+          return true;
+        }
+      }
+      function byPrice( hotel ){
+        return hotel.price <= selectedPrice;        
+      }
+      // hotels -> [ city, price, rating ] -> filtered hotels list
+      function filterHotels(){
+
+        console.log( selectedCity, selectedPrice, selectedRating );
+
+        // 1 Loop:
+        filteredHotels = hotels.filter(function( hotel ){
+
+          return byCity( hotel ) && byPrice( hotel ) && byRating( hotel );
+
+        });
+
+        // 3 Loops:
+        // filteredHotels = hotels
+        // .filter( byCity )
+        // .filter( byPrice )
+        // .filter( byRating );
+        
+        displayHotels();
+        
+      }
+
+      function handleRatingChange( event ){
+        selectedRating = parseInt( event.target.value );
+        filterHotels();
+      }
+      function handleSubmit( event ){
+        event.preventDefault();
+        selectedCity = city.value;
+        filterHotels();
+        console.log( event );
+      }
+      function handlePriceInput( event ){
+        selectedPriceVal.innerText = event.target.value;
+      }
+      function handlePriceChange( event ){
+        selectedPrice = parseInt( event.target.value );
+        filterHotels();
+      }
+      function displayHotels(){
+
+        hotelsBox.innerHTML = "";
+        // Loop over hotels list, for each hotel render some HTML
+        let hotelsOutput = "";
+        filteredHotels.map(function(hotel){
+          hotelsOutput += `
+            <div class="hotel">
+              <p>Name: ${hotel.name}</p>
+              <p>City: ${hotel.city}</p>
+              <p>Price: &euro; ${hotel.price}</p>
+              <p>Rating: ${hotel.rating}*</p>
+            </div>
+          `;
+        });
+        hotelsBox.innerHTML = hotelsOutput;
+        
+      }
+
+      rating.addEventListener("change", handleRatingChange );
+      price.addEventListener("input", handlePriceInput );
+      price.addEventListener("change", handlePriceChange );
+      form.addEventListener("submit", handleSubmit );
+
+      displayHotels();
+
+    </script>
+  </body>
+</html>

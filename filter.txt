@@ -1,0 +1,6 @@
+[1,2,3,4].filter( function(num){ return true; });
+(4) [1, 2, 3, 4]
+[1,2,3,4].filter( function(num){ return false; });
+[]
+[1,2,3,4].filter( function(num){ return num > 2; });
+(2) [3, 4]

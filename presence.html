@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Presence</title>
+  </head>
+  <body>
+
+    <div id="app"></div>
+    <script>
+      const students = [
+        { name: "Aleiferis Konstantinos", present: false }, 
+        { name: "Asimakopoulos Giorgos", present: false, mic: false }, 
+        { name: "Balaskas Kostas", present: false }, 
+        { name: "BarOUtas Panagiotis", present: false },  
+        { name: "Chalvatzi Elissavet", present: false }, 
+        { name: "Christou Nikolaos", present: false, mic: false },  
+        { name: "Despotidis Nick", present: false }, 
+        { name: "Douros Vasilis", present: false }, 
+        { name: "Giazitzis Giorgos", present: false },      
+        { name: "KlAdis Nikolaos", present: false }, 
+        { name: "Koutsiouki Kalliopi", present: false, mic: false }, 
+        { name: "Kyriakidis Kyriakos", present: false }, 
+        { name: "Letsios Giorgos", present: false, mic: false },  
+        { name: "Loudianos Angelos", present: false, mic: false }, 
+        { name: "Mageirias Christos", present: false }, 
+        { name: "MisOUlis Dimitris", present: false }, 
+        { name: "Papadopoulos Chris", present: false }, 
+        { name: "Petromichelakis Dimitris", present: false, mic: false }, 
+        { name: "Rokka Anastasia", present: false }, 
+        { name: "Syrios Nikolaos", present: false }, 
+        { name: "TasOUla Niky", present: false }, 
+        { name: "Tasoulas Odysseas", present: false }, 
+        { name: "Triantafyllou Nikos", present: false }, 
+        { name: "TsekOUras Ilias", present: false }, 
+        { name: "Tzelis Christos", present: false }, 
+        { name: "Tzitzis Iasonas", present: false, mic: false }, 
+        { name: "Vardakis Michalis", present: false }, 
+        { name: "Vournas Panagiotis", present: false }, 
+        { name: "Chatzigeorgiou Dimitris", present: false }, 
+        { name: "Xideros Stathis", present: false } 
+      ];
+
+      /* STATS: */
+      /* const presentStudents = students.filter(function(student){ return student.present; }); */
+      const presentStudents = students.filter(student => student.present);
+      document.querySelector("#app").innerHTML =
+        "Students present: " + presentStudents.length;
+      document.querySelector("#app").innerHTML +=
+        "<br/>Students total: " + students.length;
+
+      /* Display absent students: */
+      document.querySelector("#app").innerHTML += "<hr>";
+      const absentStudents = students.filter(student => !student.present);
+      absentStudents.map(student => {
+        document.querySelector("#app").innerHTML += `
+    <p>Absent student: ${student.name}</p>
+`;
+      });
+    </script>
+  </body>
+</html>
